@@ -1,6 +1,7 @@
-serial_sniffer/build/
-serial_sniffer/__pycache__/
-serial_sniffer/core/__pycache__/
-serial_sniffer/ui/__pycache__/
+build/
+dist/
+__pycache__/
+core/__pycache__/
+ui/__pycache__/
 *.pyc
 *.exe

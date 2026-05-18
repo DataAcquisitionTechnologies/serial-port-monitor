@@ -32,7 +32,7 @@ The app opens both selected ports and forwards bytes in both directions:
 - `TX`: virtual port to physical port.
 - `RX`: physical port to virtual port.
 
-Every forwarded byte chunk becomes a `Packet`, which is emitted to the UI.
+Forwarding happens immediately for every byte chunk read from the source port. Capture display is buffered separately: line-based ASCII traffic is grouped until a `\n` byte is seen, with a short idle flush for traffic that does not include a line ending. This keeps commands such as `Command Error! Please retry!\r\n` on one packet-log row without changing or delaying the bytes written to the target port.
 
 ## Source Layout
 
@@ -116,6 +116,7 @@ Responsibilities:
 - Open virtual and physical serial ports.
 - Start one reader thread per direction.
 - Forward bytes from source to target.
+- Buffer captured display rows until line endings, idle timeout, or the safety buffer limit.
 - Emit `Packet` objects to the UI.
 - Emit user-readable error/status messages.
 - Close serial ports on stop or failure.
@@ -242,5 +243,5 @@ Before sharing a build:
 
 - Hardware flow control is not exposed in the UI.
 - CSV export covers the packet log, not a separate SCPI command export.
-- SCPI extraction is best-effort and packet-based. A command split across serial reads may not appear as one complete SCPI command in the viewer.
+- SCPI extraction is best-effort. Normal CR/LF-ended commands are grouped before extraction, but unusual protocols without line endings may still be shown by idle-time chunks.
 - Binary protocols are fully visible in the packet log but may not produce SCPI viewer entries.

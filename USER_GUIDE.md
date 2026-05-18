@@ -97,6 +97,8 @@ The main packet log is available in both versions.
 - `Bytes`: number of bytes in the packet.
 - `Delta (ms)`: time since the previous packet.
 
+For line-based ASCII traffic, SerialSniffer groups bytes until a line ending such as CR/LF is received. This keeps responses like `Command Error! Please retry!` on one row even if the serial driver delivered the bytes in smaller chunks. The forwarded serial data is not modified.
+
 Use the filter box to search visible packets by hex or ASCII text.
 
 Use the checkboxes to show or hide TX and RX rows.
@@ -176,4 +178,4 @@ Another application is already using that COM port.
 
 - Check the packet log first. If the packet log has data, capture is working.
 - The traffic may not be SCPI or may be binary.
-- The command may be split across packets in a way that is still visible in the packet log but not extracted as one command in the SCPI panel.
+- The command may not end with a normal CR/LF line ending, or it may not look like a SCPI-style ASCII command.
